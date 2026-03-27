@@ -1,238 +1,73 @@
-# ⚡ Delta AI — Intelligent Problem-Solving Assistant
+# Delta AI — Gen AI Chat & Prompt Engineering Assistant
 
-A full-stack AI chat application with **RAG (Retrieval Augmented Generation)**, voice input, multi-model support, and a sleek modern UI.
+Delta is a full-stack Generative AI application I built to solve real-world problems using **Prompt Engineering** and **RAG (Retrieval-Augmented Generation)**. It allows users to chat with multiple AI models (Google Gemini and Llama 3) and ask questions directly based on uploaded documents.
 
----
+This project was built from scratch to demonstrate strong problem-solving skills in a **Gen AI environment**.
 
-## 🧠 Features
+## 🚀 Key Features Built
 
-### Core Chat
-- 💬 Multi-turn AI conversations powered by **Gemini** and **Llama 3.3 70B**
-- 🎙️ **Voice-to-Text** input (Web Speech API with continuous listening)
-- 🔊 **Text-to-Speech** — listen to any AI response
-- ✍️ Streaming typing animation for AI responses
-- 📋 One-click copy for AI messages
-- 💡 **Suggested follow-up questions** after each response
+- **Custom RAG Pipeline:** Users can upload PDFs or Text files. The app reads the text, creates embeddings using Google's `text-embedding-004`, and runs semantic search.
+- **Advanced Prompt Engineering:** I engineered dynamic system prompts to inject retrieved document chunks into the AI's context. This stops the AI from hallucinating and forces it to answer only from the uploaded data.
+- **Multiple AI Models:** Integrated both **Google Gemini** and **Llama 3.3** via API to compare reasoning styles. 
+- **Voice Input & Speech:** Added Voice-to-Text and Text-to-Speech to make the application accessible.
+- **Custom Similarity Search:** Instead of using an expensive external vector database, I wrote a custom cosine similarity algorithm mathematically in Node.js to match user queries with document chunks in MongoDB.
 
-### RAG (Retrieval Augmented Generation)
-- 📄 Upload **PDF**, **TXT**, and **Markdown** files
-- ✂️ Automatic text chunking (overlapping windows)
-- 🧮 Embeddings via **Google `text-embedding-004`** (768 dims)
-- 🔍 Semantic search using **cosine similarity** — no external vector DB needed
-- 💾 Chunk storage in **MongoDB**
-- 🔗 Retrieved context injected into the LLM prompt
-- 📚 Source attribution shown in AI responses
-- 🔄 Select specific documents or search all at once
+## 🛠️ Technology Stack (ATS Keywords)
 
-### AI Modes
-| Mode | Description |
-|------|-------------|
-| **Standard** | Single model chat |
-| **RAG** | Chat grounded in your uploaded documents |
-| **Dual Brain** | Compare Gemini vs Llama 3.3 70B side-by-side |
-| **Thinking Mode** | Extended reasoning before answering |
+- **AI & Data:** Generative AI (Gen AI), Prompt Engineering, Large Language Models (Gemini, Llama 3), Retrieval-Augmented Generation (RAG), Vector Embeddings (`text-embedding-004`), Semantic Search.
+- **Backend Core:** Node.js, Express.js, RESTful APIs.
+- **Database:** MongoDB, Mongoose (Used for document chunk storage & retrieval).
+- **Frontend App:** Next.js (React), TypeScript, TailwindCSS.
 
-### UI/UX
-- 🌑 Dark mode only — sleek, minimal, ChatGPT-inspired
-- 📱 Fully responsive (mobile + desktop)
-- 🗂️ Chat history sidebar with per-chat delete and **Clear All**
-- 🔐 Auth with Login / Register (JWT, HTTP-only cookies)
-- ⚡ Model selection with live rate-limit indicators
-- 📶 Auto-model switching when rate limit is critical
+## 📁 Project Architecture Highlights
 
----
+- `/server/routes/rag.js`: Handles document text extraction and prompt injection (Prompt Engineering focus).
+- `/server/utils/ragPipeline.js`: The core problem-solving logic for document text chunking and executing the cosine similarity search.
+- `/chat-frontend`: A responsive, dark-mode user interface designed to feel like modern AI chatbots (ChatGPT inspired).
 
-## 🏗️ Tech Stack
+## ⚙️ How to Run Locally
 
-| Layer | Technology |
-|---|---|
-| **Frontend** | Next.js 15 (App Router), TypeScript |
-| **Styling** | TailwindCSS v4, shadcn/ui |
-| **Animations** | Framer Motion |
-| **Backend** | Node.js, Express |
-| **Database** | MongoDB (via Mongoose) |
-| **AI Models** | Google Gemini API, Groq (Llama 3.3 70B) |
-| **Embeddings** | Google `text-embedding-004` |
-| **Auth** | JWT + bcrypt + HTTP-only cookies |
-| **File Upload** | Multer (memory storage) |
-| **PDF Parsing** | pdf-parse |
+### 1. Requirements
+- Node.js (v18+)
+- A MongoDB connection (Local or free Atlas tier)
+- Free API keys from Google API Studio (Gemini) and Groq (Llama)
 
----
-
-## 📁 Project Structure
-
-```
-delta/
-├── server/                        # Node.js/Express backend
-│   ├── models/
-│   │   ├── User.js                # User auth model
-│   │   ├── Chat.js                # Chat/message model
-│   │   └── DocumentChunk.js       # RAG chunk + embedding storage
-│   ├── routes/
-│   │   ├── ask.js                 # Main AI chat route
-│   │   ├── auth.js                # Login / Register / Logout
-│   │   ├── conversations.js       # Chat history CRUD
-│   │   ├── transcribe.js          # Voice transcription
-│   │   └── rag.js                 # RAG: upload, list, delete, chat
-│   ├── middleware/
-│   │   └── authMiddleware.js      # JWT protect middleware
-│   ├── utils/
-│   │   └── ragPipeline.js         # Extract → Chunk → Embed → Search
-│   └── server.js                  # Express app entry
-│
-└── chat-frontend/                  # Next.js frontend
-    └── src/
-        ├── app/
-        │   ├── page.tsx
-        │   ├── layout.tsx
-        │   └── globals.css
-        └── components/
-            ├── chat/
-            │   ├── ChatLayout.tsx  # Main chat UI + all state
-            │   └── RAGPanel.tsx    # Document upload & RAG controls
-            └── auth/
-                └── LoginDialog.tsx # Login / Register modal
-```
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js 18+
-- MongoDB (local or Atlas)
-- Google Gemini API key
-- Groq API key
-
-### 1. Clone & install
-
+### 2. Installation
+Clone the repository and install dependencies for both the frontend and backend:
 ```bash
-git clone <repo-url>
-cd delta
-
-# Backend
+# Install backend packages
 cd server
 npm install
 
-# Frontend
+# Install frontend packages
 cd ../chat-frontend
 npm install
 ```
 
-### 2. Configure environment
-
-**`server/.env`**
+### 3. Environment Config
+In the `/server` folder, create a `.env` file with these values:
 ```env
 PORT=5000
-MONGODB_URI=mongodb://localhost:27017/ai-voice-assistant
-GEMINI_API_KEY=your_gemini_api_key_here
-GROQ_API_KEY=your_groq_api_key_here
-JWT_SECRET=your_jwt_secret_here
+MONGODB_URI=your_mongodb_connection_string
+GEMINI_API_KEY=your_gemini_api_key
+GROQ_API_KEY=your_groq_api_key
+JWT_SECRET=your_jwt_secret_string
 ```
 
-**`chat-frontend/.env.local`** (optional)
-```env
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
-```
-
-### 3. Run
-
+### 4. Start the Application
+Open two separate terminal windows:
 ```bash
-# Terminal 1 — Backend
+# Terminal 1: Start Backend Server
 cd server
 node server.js
-
-# Terminal 2 — Frontend
+```
+```bash
+# Terminal 2: Start Frontend UI
 cd chat-frontend
 npm run dev
 ```
+Open `http://localhost:3000` in your browser.
 
-Open [http://localhost:3000](http://localhost:3000)
+## 🎯 What I Learned
 
----
-
-## 📡 API Reference
-
-### Auth
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/auth/register` | Create new account |
-| POST | `/api/auth/login` | Login |
-| POST | `/api/auth/logout` | Logout |
-| GET | `/api/auth/me` | Get current user |
-
-### Chat
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/ask` | Send message (multipart/form-data) |
-| POST | `/api/ask/dual` | Dual-brain mode (Gemini + Llama) |
-| GET | `/api/conversations` | List all conversations |
-| GET | `/api/conversations/:id/messages` | Get messages in a conversation |
-| DELETE | `/api/conversations/:id` | Delete a conversation |
-
-### RAG
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/rag/upload` | Upload & index a document (PDF/TXT/MD) |
-| GET | `/api/rag/documents` | List user's indexed documents |
-| DELETE | `/api/rag/documents/:id` | Remove a document |
-| POST | `/api/rag/chat` | RAG-grounded chat with SSE streaming |
-
----
-
-## 🔬 RAG Pipeline Details
-
-```
-Document Upload
-     │
-     ▼
-Text Extraction (pdf-parse / UTF-8)
-     │
-     ▼
-Overlapping Chunking (300 words, 50 overlap)
-     │
-     ▼
-Embedding Generation (Google text-embedding-004, 768 dims)
-     │
-     ▼
-MongoDB Storage (DocumentChunk collection)
-     │
-     ▼
-─────────── At Query Time ───────────
-     │
-     ▼
-Embed User Query
-     │
-     ▼
-Cosine Similarity Search (top-5 chunks, threshold > 0.3)
-     │
-     ▼
-Inject Retrieved Context into Gemini System Prompt
-     │
-     ▼
-Streaming SSE Response to Frontend
-     │
-     ▼
-Source Attribution in UI
-```
-
----
-
-## � UI Highlights
-
-- **Login/Register** — Tab-style switcher, inline error banners, spinner on submit
-- **Chat messages** — Proper left/right alignment, copy button, read-aloud, model badge
-- **RAG Panel** — Floating document manager with upload, selection, and delete
-- **Sidebar** — Chat history with per-item delete + Clear All button
-- **Voice input** — Live transcript preview, listening/processing/error states
-- **Typing animation** — Smooth character-by-character reveal (stable across re-renders)
-
----
-
-## ⚠️ Notes
-
-- Voice-to-Text requires **Chrome or Edge** (Web Speech API)
-- RAG embedding generation may take ~10–30 seconds for large documents
-- Max document size: **20 MB**, max chunks: **200** (~50,000 words)
-- Rate limit indicators are demo metrics (not actual API quota tracking)
-![alt text](image.png)
+Building this project taught me how to practically apply Generative AI concepts rather than just reading about them. I gained hands-on experience dealing with AI context windows, writing effective system prompts (Prompt Engineering), chunking data for LLMs, and solving complex web architecture problems using Next.js and Node.js.
